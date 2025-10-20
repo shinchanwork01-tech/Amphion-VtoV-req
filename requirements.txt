@@ -6,7 +6,6 @@ accelerate
 unidecode
 numpy
 scipy
-espeak-ng
 librosa
 encodec
 phonemizer
