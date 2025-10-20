@@ -5,6 +5,8 @@
 
 import os
 from huggingface_hub import snapshot_download
+import argparse  # <-- ADDED
+import torch      # <-- ADDED (was missing from original file)
 
 from models.vc.vevo.vevo_utils import *
 
@@ -19,6 +21,13 @@ def vevo_timbre(content_wav_path, reference_wav_path, output_path):
 
 
 if __name__ == "__main__":
+    # ===== Argument Parser =====  <-- ADDED SECTION
+    parser = argparse.ArgumentParser(description="VEVO Timbre Conversion using command-line arguments.")
+    parser.add_argument('--source', required=True, type=str, help="Path to the source audio (content).")
+    parser.add_argument('--reference', required=True, type=str, help="Path to the reference audio (timbre).")
+    parser.add_argument('--output', required=True, type=str, help="Path to save the output audio.")
+    args = parser.parse_args()
+    
     # ===== Device =====
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
@@ -63,8 +72,5 @@ if __name__ == "__main__":
         device=device,
     )
 
-    content_wav_path = "./models/vc/vevo/wav/source.wav"
-    reference_wav_path = "./models/vc/vevo/wav/arabic_male.wav"
-    output_path = "./models/vc/vevo/wav/output_vevotimbre.wav"
-
-    vevo_timbre(content_wav_path, reference_wav_path, output_path)
+    # Use arguments instead of hardcoded paths <-- MODIFIED SECTION
+    vevo_timbre(args.source, args.reference, args.output)
